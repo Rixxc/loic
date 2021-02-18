@@ -1,0 +1,15 @@
+[package]
+name = "rr_screensharing"
+version = "0.1.0"
+authors = ["Aaron Kaiser <a_kaiser@posteo.de>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rocket = { git = "https://github.com/SergioBenitez/Rocket", features=["secrets"]}
+rocket_contrib = { git = "https://github.com/SergioBenitez/Rocket", features = ["uuid"] }
+sailfish = "0.3.0"
+uuid = { version = "0.8", features = ["serde", "v4"] }
+tokio = {version = "0.2.9", features = ["sync", "process", "fs"]}
+serde = "1" 

@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <% include!("header.stpl"); %>
+    <script src="/static/ion-sdk.min.js"></script>
+    <script src="/static/json-rpc.min.js"></script>
+  </head>
+  <body>
+    <div id="page-container">
+        <% include!("navbar.stpl"); %>
+        <main>
+        <div style="container-fluid">
+            <video autoplay muted
+                id="remote-video"
+                style="background-color: black; width: 100%; height: 100%"
+                ></video>
+        </div>
+        </main>
+    <div>
+    <script>
+        const remoteVideo = document.getElementById("remote-video");
+        const signalRemote = new Signal.IonSFUJSONRPCSignal(
+            `wss://${window.location.hostname}:10000/ws`
+        );
+
+        const clientRemote = new IonSDK.Client(signalRemote);
+
+        let id = window.location.pathname.split('/').slice(-1)[0];
+        signalRemote.onopen = () => clientRemote.join(id);
+
+        let remoteStream;
+        clientRemote.ontrack = (track, stream) => {
+            if (track.kind === "video") {
+                remoteStream = stream;
+                remoteVideo.srcObject = stream;
+                remoteVideo.autoplay = true;
+            }
+        };
+    </script>
+  </body>
+</html>

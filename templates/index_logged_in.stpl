@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <% include!("header.stpl"); %>
+  </head>
+  <body>
+    <div id="page-container">
+        <% include!("navbar.stpl"); %>
+        <main>
+            <div id="content-wrap" class="container">
+                <div class="row">
+                  <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for (i, room) in rooms.iter().enumerate() { %>
+                      <tr>
+                        <th><%= i %></th>
+                        <% if room.owner == user.username { %>
+                          <th><a href="/stream/<%= room.uuid %>"><%= room.name %></a> (<%= room.owner %>)</th>
+                        <% } else {%>
+                          <th><a href="/watch/<%= room.uuid %>"><%= room.name %></a> (<%= room.owner %>)</th>
+                        <% }%>
+                        <th>
+                          <% if room.owner == user.username { %>
+                            <form action="/api/delete" method="POST">
+                              <input id="uuid" name="uuid" type="hidden" value="<%= room.uuid %>">
+                              <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                          <% } %>
+                        </th>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                  </table>
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <div class=".container-sm">
+                    <form action="/api/new" method="POST">
+                      <div class="mb-3">
+                        <input id="name" name="name" type="text" class="form-control symbol-name">
+                      </div>
+                      <button class="btn btn-primary" type="submit">New</button>
+                    </form>
+                  </div>
+                </div>
+            </div>
+        </main>
+        <footer id="footer" class="text-muted">
+            <div class="container">
+                <p class="mb-1">Screensharing tool, powered by Rocket and Ion-SFU.</p>
+            </div>
+        </footer>
+    <div>
+  </body>
+</html>

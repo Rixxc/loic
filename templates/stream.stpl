@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <% include!("header.stpl"); %>
+    <script src="/static/ion-sdk.min.js"></script>
+    <script src="/static/json-rpc.min.js"></script>
+  </head>
+  <body>
+    <div id="page-container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">LOIC</a>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                    <input type="text" disabled id="watchlink">
+                    <button class="navbar-nav me-auto mb-2 mb-lg-0 btn btn-primary" style="padding-left: 10" onclick="copylink()">
+                        Copy watch link
+                    </button>
+                    <form class="d-flex" action="/login" method="GET">
+                        <button class="btn btn-outline-success" type="submit">Login</button>
+                    </form>
+                    &nbsp;&nbsp;
+                    <form class="d-flex" action="/api/logout" method="POST">
+                        <button class="btn btn-outline-danger" type="submit">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <main>
+        <div style="container-fluid">
+            <video autoplay muted
+                id="local-video"
+                style="background-color: black; width: 100%; height: 100%"
+                onclick="start()"
+                ></video>
+        </div>
+        </main>
+    <div>
+    <script>
+        document.getElementById("watchlink").value = window.location.href.replace("stream", "watch");
+        function copylink() {
+            let copyText = document.getElementById("watchlink");
+
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+
+            document.execCommand("copy");
+
+            let location = window.location.href;
+            location = location.replace("stream", "watch");
+            navigator.clipboard.writeText(location);
+        }
+    </script>
+    <script>
+        const localVideo = document.getElementById("local-video");
+        let localDataChannel;
+        const signalLocal = new Signal.IonSFUJSONRPCSignal(
+            `wss://${window.location.hostname}:10000/ws`
+        );
+
+        let localStream;
+        const start = (sc) => {
+            simulcast = sc;
+            IonSDK.LocalStream.getDisplayMedia({
+                resolution: "hd",
+                simulcast: sc,
+                audio: true,
+            })
+            .then((media) => {
+                localStream = media;
+                localVideo.srcObject = media;
+                localVideo.autoplay = true;
+                localVideo.controls = true;
+                localVideo.muted = true;
+                //joinBtns.style.display = "none";
+                clientLocal.publish(media);
+            })
+            .catch(console.error);
+            localDataChannel = clientLocal.createDataChannel("data");
+        };
+
+        const clientLocal = new IonSDK.Client(signalLocal);
+
+        let id = window.location.pathname.split('/').slice(-1)[0];
+        signalLocal.onopen = () => {
+            clientLocal.join(id);
+            start();
+        }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <% include!("header.stpl"); %>
+  </head>
+  <body>
+    <div id="page-container">
+        <% include!("navbar.stpl"); %>
+        <main>
+            <div id="content-wrap" class="container">
+                <div class="row">
+                    <h1>Login</h1>
+                    <form action="/api/login" method="POST">
+                        <label for="username" class="form-label">Username</label>
+                        <input id="username" name="username" class="form-control symbol-name" type="text">
+                        <br>
+                        <label for="token" class="form-label">Token</label>
+                        <input id="token" name="token" class="form-control symbol-name" type="password">
+                        <br>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+        <footer id="footer" class="text-muted">
+            <div class="container">
+                <p class="mb-1">Screensharing tool, powered by Rocket and Ion-SFU.</p>
+            </div>
+        </footer>
+    <div>
+  </body>
+</html>

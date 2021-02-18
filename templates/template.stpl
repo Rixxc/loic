@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <% include!("header.stpl"); %>
+  </head>
+  <body>
+    <div id="page-container">
+        <main>
+        </main>
+        <footer id="footer" class="text-muted">
+            <div class="container">
+                <p class="mb-1">Screensharing tool, powered by Rocket and Ion-SFU.</p>
+            </div>
+        </footer>
+    <div>
+  </body>
+</html>
