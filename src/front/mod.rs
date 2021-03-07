@@ -4,7 +4,7 @@ use sailfish::TemplateOnce;
 use rocket_contrib::uuid::Uuid;
 use tokio::sync::RwLockReadGuard;
 
-use crate::common::{User, Room, DB};
+use crate::common::{User, Room, DB, LocalConfig};
 
 fn respond<T: TemplateOnce>(t: T) -> Result<Response<'static>, BadRequest<&'static str>> {
     let rsp = t
@@ -52,11 +52,15 @@ fn index() -> Result<Response<'static>, BadRequest<&'static str>> {
 
 #[derive(TemplateOnce)]
 #[template(path = "login.stpl")]
-struct LoginTemplate{}
+struct LoginTemplate{
+    show_gitlab_oauth: bool
+}
 
 #[get("/login")]
-fn login() -> Result<Response<'static>, BadRequest<&'static str>> {
-    respond(LoginTemplate{})
+fn login(config: State<LocalConfig>) -> Result<Response<'static>, BadRequest<&'static str>> {
+    respond(LoginTemplate{
+        show_gitlab_oauth: !config.gitlab_oauth_base_url.is_empty()
+    })
 }
 
 #[derive(TemplateOnce)]

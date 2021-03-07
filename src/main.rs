@@ -1,16 +1,11 @@
-use common::DB;
+use common::{DB, LocalConfig};
 use rocket_contrib::serve::StaticFiles;
-use serde::Deserialize;
 use rocket::fairing::AdHoc;
 
 mod front;
 mod api;
 mod common;
-
-#[derive(Deserialize)]
-struct LocalConfig{
-    login_token: String,
-}
+mod oauth;
 
 #[rocket::launch]
 async fn rocket() -> _{
@@ -24,4 +19,5 @@ async fn rocket() -> _{
         .mount("/", front::routes())
         .mount("/static", StaticFiles::from(static_dir))
         .mount("/api", api::routes())
+        .mount("/oauth", oauth::routes())
 }

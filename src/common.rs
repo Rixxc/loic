@@ -1,5 +1,6 @@
 use rocket::request::{Request, FromRequest, Outcome};
 use tokio::sync::RwLock;
+use serde::Deserialize;
 
 pub struct DB{
     pub rooms: RwLock<Vec<Room>>
@@ -40,4 +41,13 @@ impl<'a, 'r> FromRequest<'a, 'r> for User {
         }
 
     }
+}
+
+#[derive(Deserialize)]
+pub struct LocalConfig{
+    pub login_token: String,
+    pub base_url: String,
+    pub gitlab_oauth_base_url: String,
+    pub gitlab_oauth_client_id: String,
+    pub gitlab_oauth_client_secret: String
 }

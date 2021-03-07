@@ -5,7 +5,7 @@ use rocket::http::{Cookie, CookieJar, Status, SameSite};
 use rocket::request::{FromForm, Form};
 use uuid::Uuid;
 
-use crate::{LocalConfig, common::{User, DB, Room}};
+use crate::common::{User, DB, Room, LocalConfig};
 
 pub fn routes() -> Vec<Route> {
     rocket::routes![
@@ -53,7 +53,13 @@ struct NewForm {
 async fn new(user: User, db: State<'_, DB>, room: Form<NewForm>) -> Redirect {
     let uuid = Uuid::new_v4();
     let mut rooms = db.rooms.write().await;
-    rooms.push(Room{uuid: Box::new(uuid.to_string()), name: Box::new(room.name.clone()), owner: user.username});
+    let mut name = room.name.clone();
+
+    if name.is_empty() {
+        name = "unnamed room".to_string();
+    }
+
+    rooms.push(Room{uuid: Box::new(uuid.to_string()), name: Box::new(name), owner: user.username});
     Redirect::to(format!("/stream/{}", uuid))
 }
 
