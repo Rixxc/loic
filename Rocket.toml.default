@@ -8,3 +8,7 @@ log_level = "normal"
 secret_key = [here be dragons]
 limits = { forms = 32768 }
 login_token = [here be dragons]
+base_url = ""
+gitlab_oauth_base_url = ""
+gitlab_oauth_client_id = ""
+gitlab_oauth_client_secret = ""

@@ -1,9 +1,10 @@
-FROM rust:latest
+FROM rustlang/rust:nightly
 
 WORKDIR /build
 COPY src /build/src
 COPY templates /build/templates 
 COPY Cargo.toml /build/
+COPY Cargo.lock /build/
 RUN cargo build --release
 
 WORKDIR /app/
